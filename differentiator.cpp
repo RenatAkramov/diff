@@ -6,8 +6,8 @@ int main()
 {
     CONVERSIONS* conversion = make_conversion();
     NODE* root = create_tree(conversion);
-    NODE* root1 = diff(root);
-    DrawTree(root1);
+    //NODE* root1 = diff(root);
+    DrawTree(root);
 }
 
 

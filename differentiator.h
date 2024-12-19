@@ -16,6 +16,7 @@ union values
     int num_value;
     int var_value;
     int sym_value;
+    int fun_value;
 };
 
 struct NODE
@@ -37,7 +38,10 @@ enum operations
 
 enum variable
 {
-    X = 1
+    SIN = 1,
+    COS = 2,
+    TG  = 3,
+    CTG = 4
 };
 
 const int amount_operations = 4;
@@ -47,7 +51,8 @@ enum type
 {
     SYM  = 1,
     NUM  = 2,
-    VAR  = 3
+    VAR  = 3,
+    FUN  = 4
 };
 
 struct operations_t
@@ -67,16 +72,16 @@ enum errorcode
 
 const operations_t operations[amount_operations] = {{'*', 1}, {'/', 2}, {'-', 3}, {'+', 4}};
 
-/*struct token
+struct FUNKTION_T
 {
-    
-};*/
+    const char* name;
+    int code;
+};
 
+const FUNKTION_T funktions[4] = {{"sin", 1}, {"cos", 2}, {"tg", 3}, {"ctg", 4}};
 
 NODE* new_node(int type, values value, NODE* vol, NODE* vol2);
-
 NODE* create_tree(CONVERSIONS* conversion);
-
 NODE* GetP(CONVERSIONS* conversion);
 NODE* GetE(CONVERSIONS* conversion);
 NODE* GetT(CONVERSIONS* conversion);
@@ -88,6 +93,7 @@ void  spend(NODE* node);
 int   DrawTree(NODE* root);
 int   DrawNode(NODE* node, FILE* file_ptr);
 CONVERSIONS* make_conversion();
+NODE* GetF(CONVERSIONS* conversion);
 NODE* copy_node(NODE* node);
 NODE* diff(NODE* node);
 

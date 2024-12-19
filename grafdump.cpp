@@ -53,7 +53,7 @@ int DrawNode(NODE* node, FILE* file_ptr)
 
    
     fprintf(file_ptr, "label = \"");
-    // printf("NODE TYPE: %d\n", node->type);
+    printf("NODE TYPE: %d\n", node->type);
     if (node->type == VAR)
     {
         printf("IN var\n");
@@ -61,17 +61,30 @@ int DrawNode(NODE* node, FILE* file_ptr)
     }
     else if (node->type == NUM)
     {
-        //printf("in NUM\n");
+        printf("in NUM\n");
         fprintf(file_ptr, "%d", node->value.num_value);
     }
-    else
+    else if (node->type == SYM)
     {
+        printf("in SYM\n");
         for (int i = 0; i < amount_operations; ++i)
         {
             if (node->value.sym_value == operations[i].code)
             {
                 fprintf(file_ptr, "%c", operations[i].name_symbol);
 
+                break;
+            }
+        }
+    }
+    else if (node->type == FUN)
+    {
+        printf("in FUN\n");
+        for (int i = 0; i < amount_operations; ++i)
+        {
+            if (node->value.fun_value == funktions[i].code)
+            {
+                fprintf(file_ptr, "%c", funktions[i].name);
                 break;
             }
         }
