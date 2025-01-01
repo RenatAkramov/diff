@@ -5,9 +5,16 @@
 int main()
 {
     CONVERSIONS* conversion = make_conversion();
+    create_tree_l(conversion);
+
     NODE* root = create_tree(conversion);
-    //NODE* root1 = diff(root);
-    DrawTree(root);
+    NODE* root_dif = diff(root);
+    for (int i = 0; i < 5; i++)
+    {
+        simplifare(root_dif);
+    }
+    DrawTree(root_dif);
+    //create_tree_l(conversion);
 }
 
 
@@ -16,7 +23,7 @@ CONVERSIONS* make_conversion()
     CONVERSIONS* conversion = (CONVERSIONS*) calloc(1, sizeof(CONVERSIONS));
     conversion->p = 0;
     FILE* file_in = fopen("primer.txt", "r");
-    fscanf(file_in, "%s",conversion->s);   
+    fscanf(file_in, "%s",conversion->s);
     printf("%s\n", conversion->s);
     fclose(file_in);
     return conversion;
@@ -57,9 +64,9 @@ NODE* diff(NODE* node)
 
             value.sym_value = MUL;
 
-            
+
             union values value_add = {};
-            value_add.sym_value     = ADD;
+            value_add.sym_value    = ADD;
 
             return new_node(SYM, value_add, new_node(SYM, value, dl, cr), new_node(SYM, value, cl, dr));
         }
@@ -106,11 +113,123 @@ NODE* copy_node(NODE* node)
 
 
 
-/*
-CONVERSIONS* simplifare(CONVERSIONS* node)
-{
 
+NODE* simplifare(NODE* node)
+{
+    if (node->type == SYM)
+    {
+        union values value = {};
+        switch(node->value.sym_value)
+        {
+            case ADD:
+            {
+
+                if(node->right->type == NUM && node->left->type == NUM)
+                {
+                    node->type = NUM;
+                    value.num_value = node->right->value.num_value + node->left->value.num_value;
+                    node->value = value;
+
+                    node->left = NULL;
+                    node->right = NULL;
+                }
+                break;
+            }
+            case SUB:
+            {
+                if(node->right->type == NUM && node->left->type == NUM)
+                {
+                    node->type = NUM;
+                    value.num_value = node->left->value.num_value - node->right->value.num_value;
+                    //printf("v1: %d, v2: %d  sub: %d\n",node->right->value.num_value, value.num_value);
+                    node->value = value;
+
+                    node->left = NULL;
+                    node->right = NULL;
+                }
+                break;
+            }
+            case MUL:
+            {
+
+                printf("left_value: %d, right_value: %d\n", node->left->value.num_value, node->right->value.num_value);
+                if(node->left->type == NUM && node->left->value.num_value == 1)
+                {
+                    NODE* node_r = node->right;
+                    node->left  = node_r->left;
+                    node->right = node_r->right;
+                    node->type  = node_r->type;
+                    node->value = node_r->value;
+
+                }
+                if(node->right->type == NUM && node->right->value.num_value == 1)
+                {
+                    NODE* node_r = node->left;
+                    node->left  = node_r->left;
+                    node->right = node_r->right;
+                    node->type  = node_r->type;
+                    node->value = node_r->value;
+                }
+                if(node->right->type == NUM && node->left->type == NUM)
+                {
+                    node->type = NUM;
+                    value.num_value = node->right->value.num_value * node->left->value.num_value;
+                    node->value = value;
+
+                    node->left = NULL;
+                    node->right = NULL;
+                }
+                break;
+            }
+            case DIV:
+            {
+                if(node->left->type == NUM && node->left->value.num_value == 1)
+                {
+                    NODE* node_r = node->right;
+                    node->left  = node_r->left;
+                    node->right = node_r->right;
+                    node->type  = node_r->type;
+                    node->value = node_r->value;
+
+                }
+                if(node->right->type == NUM && node->right->value.num_value == 1)
+                {
+                    NODE* node_r = node->left;
+                    node->left  = node_r->left;
+                    node->right = node_r->right;
+                    node->type  = node_r->type;
+                    node->value = node_r->value;
+                }
+                if(node->right->type == NUM && node->left->type == NUM)
+                {
+                    node->type = NUM;
+                    value.num_value = node->right->value.num_value / node->left->value.num_value;
+                    node->value = value;
+
+                    node->left = NULL;
+                    node->right = NULL;
+                }
+                break;
+            }
+            default:
+            {
+                printf("ERROR IN simplifare\n");
+                break;
+
+            }
+
+        }
+    }
+    if (node->left != NULL)
+    {
+        simplifare(node->left);
+    }
+    if (node->right != NULL)
+    {
+        simplifare(node->right);
+    }
+    return node;
 }
-*/
+
 
 
