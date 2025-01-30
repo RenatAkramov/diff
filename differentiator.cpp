@@ -5,16 +5,18 @@
 int main()
 {
     CONVERSIONS* conversion = make_conversion();
-    create_tree_l(conversion);
+    tokens_t* arr_token = create_lec(conversion);
 
-    NODE* root = create_tree(conversion);
+    NODE* root = create_tree(conversion, arr_token);
+    //DrawTree(root);
+    simplifare(root);
     NODE* root_dif = diff(root);
+    //DrawTree(root_dif);
     for (int i = 0; i < 5; i++)
     {
         simplifare(root_dif);
     }
     DrawTree(root_dif);
-    //create_tree_l(conversion);
 }
 
 
@@ -42,6 +44,76 @@ NODE* diff(NODE* node)
     {
         value.num_value = 1;
         return new_node(NUM, value, NULL, NULL);
+    }
+    switch(node->value.fun_value)
+    {
+        case SIN:
+        {
+            union values value_cos = {};
+            value_cos.fun_value = COS;
+            value.sym_value = MUL;
+
+            assert(node->left);
+            return new_node(SYM, value, new_node(FUN, value_cos, copy_node(node->left), NULL), diff(node->left));
+        }
+        case COS:
+        {
+            union values value_cos = {};
+            union values value_num = {};
+            value_num.num_value = -1;
+            value_cos.fun_value = SIN;
+            value.sym_value = MUL;
+
+
+            assert(node->left);
+            return new_node(SYM, value, new_node(SYM, value, new_node(NUM, value_num, NULL, NULL), new_node(FUN, value_cos, copy_node(node->left), NULL)), diff(node->left));
+        }
+        case TG:
+        {
+            union values value_cos = {};
+            union values value_num = {};
+            union values value_div = {};
+            value_div.sym_value = DIV;
+            value_num.num_value = 1;
+            value_cos.fun_value = COS;
+            value.sym_value = MUL;
+            assert(node->left);
+
+            NODE* node_cos = new_node(SYM, value_div, new_node(NUM, value_num, NULL, NULL), new_node(SYM, value, new_node(FUN, value_cos, copy_node(node->left), NULL), new_node(FUN, value_cos, copy_node(node->left), NULL)));
+            assert(node->left);
+            NODE* dif_in_tg = diff(node->left);
+            return new_node(SYM, value, node_cos, dif_in_tg);
+
+        }
+        case CTG:
+        {
+            union values value_sin   = {};
+            union values value_num   = {};
+            union values value_num_m = {};
+            union values value_div   = {};
+            value_div.sym_value      = DIV;
+            value_num.num_value      = 1;
+            value_num_m.num_value    = -1;
+            value_sin.fun_value      = SIN;
+            value.sym_value          = MUL;
+            assert(node->left);
+
+            NODE* node_cos = new_node(SYM, value_div, new_node(NUM, value_num, NULL, NULL), new_node(SYM, value, new_node(FUN, value_sin, copy_node(node->left), NULL), new_node(FUN, value_sin, copy_node(node->left), NULL)));
+            assert(node->left);
+            NODE* dif_in_tg = diff(node->left);
+            return new_node(SYM, value, new_node(NUM, value_num_m, NULL, NULL), new_node(SYM, value, node_cos, dif_in_tg));
+        }
+        case LN:
+        {
+            union values value_div = {};
+            union values value_num  = {};
+            value.sym_value = MUL;
+            value_div.sym_value = DIV;
+            value_num.num_value = 1;
+            assert(node->left);
+            return new_node(SYM, value, new_node(SYM, value_div, new_node(NUM, value_num, NULL, NULL), copy_node(node->left)), diff(node->left));
+
+        }
     }
     switch(node->value.sym_value)
     {
@@ -162,7 +234,7 @@ NODE* simplifare(NODE* node)
                     node->value = node_r->value;
 
                 }
-                if(node->right->type == NUM && node->right->value.num_value == 1)
+                else if(node->right->type == NUM && node->right->value.num_value == 1)
                 {
                     NODE* node_r = node->left;
                     node->left  = node_r->left;
@@ -170,7 +242,7 @@ NODE* simplifare(NODE* node)
                     node->type  = node_r->type;
                     node->value = node_r->value;
                 }
-                if(node->right->type == NUM && node->left->type == NUM)
+                else if(node->right->type == NUM && node->left->type == NUM)
                 {
                     node->type = NUM;
                     value.num_value = node->right->value.num_value * node->left->value.num_value;
@@ -192,7 +264,7 @@ NODE* simplifare(NODE* node)
                     node->value = node_r->value;
 
                 }
-                if(node->right->type == NUM && node->right->value.num_value == 1)
+                else if(node->right->type == NUM && node->right->value.num_value == 1)
                 {
                     NODE* node_r = node->left;
                     node->left  = node_r->left;
@@ -200,10 +272,10 @@ NODE* simplifare(NODE* node)
                     node->type  = node_r->type;
                     node->value = node_r->value;
                 }
-                if(node->right->type == NUM && node->left->type == NUM)
+                else if(node->right->type == NUM && node->left->type == NUM)
                 {
                     node->type = NUM;
-                    value.num_value = node->right->value.num_value / node->left->value.num_value;
+                    value.num_value = node->left->value.num_value / node->right->value.num_value;
                     node->value = value;
 
                     node->left = NULL;

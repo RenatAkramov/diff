@@ -10,7 +10,7 @@ int DrawTree(NODE* root)
     }
 
     FILE* file_ptr = fopen("grafdump.dot", "w");
-   
+
     if (!file_ptr)
     {
         fprintf(stderr, "File \"grafdump.dot\" error!\n");
@@ -22,11 +22,11 @@ int DrawTree(NODE* root)
     DrawNode(root, file_ptr);
 
     fprintf(file_ptr, "}");
-  
+
     fclose(file_ptr);
-  
+
     system("dot grafdump.dot -Tpng -o Dump.png");
- 
+
     return 0;
 }
 
@@ -51,13 +51,13 @@ int DrawNode(NODE* node, FILE* file_ptr)
         fprintf(file_ptr, "color = \"khaki3\", style = \"filled\", fillcolor = \"lemonchiffon\", ");
     }
 
-   
+
     fprintf(file_ptr, "label = \"");
     printf("NODE TYPE: %d\n", node->type);
     if (node->type == VAR)
     {
         printf("IN var\n");
-        fprintf(file_ptr,  "%c", node->value.var_value);
+        fprintf(file_ptr,  "%c", 'x');
     }
     else if (node->type == NUM)
     {
@@ -84,7 +84,7 @@ int DrawNode(NODE* node, FILE* file_ptr)
         {
             if (node->value.fun_value == funktions[i].code)
             {
-                fprintf(file_ptr, "%c", funktions[i].name);
+                fprintf(file_ptr, "%s", funktions[i].name);
                 break;
             }
         }

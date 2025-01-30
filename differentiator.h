@@ -4,6 +4,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include <ctype.h>
 
 struct CONVERSIONS
 {
@@ -28,32 +31,39 @@ struct NODE
     NODE* right;
 };
 
-enum operations
+struct tokens_t
 {
-    MUL = 1,
-    DIV = 2,
-    SUB = 3,
-    ADD = 4
+    int type;
+    union values value;
+    char* name;
+    NODE* node;
 };
 
-enum variable
-{
-    SIN = 1,
-    COS = 2,
-    TG  = 3,
-    CTG = 4
-};
-
-const int amount_operations = 4;
 
 
 enum type
 {
-    SYM  = 1,
-    NUM  = 2,
-    VAR  = 3,
-    FUN  = 4
+    bracket_left  = 1,
+    bracket_right = 2,
+    variable_x    = 3,
+    SIN    = 4,
+    COS    = 5,
+    TG     = 6,
+    CTG    = 7,
+    SYM    = 8,
+    NUM    = 9,
+    VAR    = 10,
+    FUN    = 11,
+    MUL    = 12,
+    DIV    = 13,
+    SUB    = 14,
+    LN     = 15,
+    ADD    = 17,
+    DOLLAR = 18,
 };
+
+const int amount_operations = 4;
+
 
 struct operations_t
 {
@@ -70,7 +80,7 @@ enum errorcode
     ERROR_G = 4
 };
 
-const operations_t operations[amount_operations] = {{'*', 1}, {'/', 2}, {'-', 3}, {'+', 4}};
+const operations_t operations[amount_operations] = {{'*', MUL}, {'/', DIV}, {'-', SUB}, {'+', ADD}};
 
 struct FUNKTION_T
 {
@@ -78,24 +88,27 @@ struct FUNKTION_T
     int code;
 };
 
-const FUNKTION_T funktions[4] = {{"sin", 1}, {"cos", 2}, {"tg", 3}, {"ctg", 4}};
+const FUNKTION_T funktions[5] = {{"sin", SIN}, {"cos", COS}, {"tg", TG}, {"ctg", CTG}, {"ln", LN}};
 
 NODE* new_node(int type, values value, NODE* vol, NODE* vol2);
-NODE* create_tree(CONVERSIONS* conversion);
-NODE* GetP(CONVERSIONS* conversion);
-NODE* GetE(CONVERSIONS* conversion);
-NODE* GetT(CONVERSIONS* conversion);
-NODE* GetG(CONVERSIONS* conversion);
-NODE* GetN(CONVERSIONS* conversion);
+NODE* create_tree(CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetP(CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetE(CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetT(CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetG(CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetN(CONVERSIONS* conversion, tokens_t* arr_token);
 void  SyntaxERROR();
-NODE* GetV(CONVERSIONS* conversion);
+NODE* GetV(CONVERSIONS* conversion, tokens_t* arr_token);
 void  spend(NODE* node);
 int   DrawTree(NODE* root);
 int   DrawNode(NODE* node, FILE* file_ptr);
 CONVERSIONS* make_conversion();
-NODE* GetF(CONVERSIONS* conversion);
+NODE* GetF(CONVERSIONS* conversion, tokens_t* arr_token);
 NODE* copy_node(NODE* node);
 NODE* diff(NODE* node);
+NODE* simplifare(NODE* node);
+tokens_t* create_lec(CONVERSIONS* conversion);
+int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token);
 
 
 #endif
