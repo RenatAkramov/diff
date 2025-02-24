@@ -1,12 +1,20 @@
 #ifndef differentiator_h
 #define differentiator_h
+#define hash_check
 
+
+#define hash_sym val->hash = hash_func( (int) val->value.sym_value, val)
+#define hash_fun val->hash = hash_func( (int) val->value.fun_value, val)
+#define hash_num val->hash = hash_func( (int) val->value.num_value, val)
+#define hash_var val->hash = hash_func( (int) val->value.var_value, val)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+
+//#include <TXLib.h>
 
 struct CONVERSIONS
 {
@@ -25,6 +33,9 @@ union values
 struct NODE
 {
     int type;
+    #ifndef hash
+    unsigned long long hash;
+    #endif
     union values value;
     NODE* left;
     NODE* parent;
@@ -58,11 +69,19 @@ enum type
     DIV    = 13,
     SUB    = 14,
     LN     = 15,
+    EXP    = 16,
     ADD    = 17,
     DOLLAR = 18,
+    POW    = 19
 };
 
-const int amount_operations = 4;
+enum hsh
+{
+    OKEY = 1,
+    ERRORS = 0
+};
+
+const int amount_operations = 10;
 
 
 struct operations_t
@@ -80,7 +99,7 @@ enum errorcode
     ERROR_G = 4
 };
 
-const operations_t operations[amount_operations] = {{'*', MUL}, {'/', DIV}, {'-', SUB}, {'+', ADD}};
+const operations_t operations[amount_operations] = {{'*', MUL}, {'/', DIV}, {'-', SUB}, {'+', ADD}, {'^', POW}};
 
 struct FUNKTION_T
 {
@@ -88,7 +107,10 @@ struct FUNKTION_T
     int code;
 };
 
-const FUNKTION_T funktions[5] = {{"sin", SIN}, {"cos", COS}, {"tg", TG}, {"ctg", CTG}, {"ln", LN}};
+const int amount_simplifare = 2;
+
+const int amount_fun = 6;
+const FUNKTION_T funktions[amount_fun] = {{"sin", SIN}, {"cos", COS}, {"tg", TG}, {"ctg", CTG}, {"ln", LN}, {"exp", EXP}};
 
 NODE* new_node(int type, values value, NODE* vol, NODE* vol2);
 NODE* create_tree(CONVERSIONS* conversion, tokens_t* arr_token);
@@ -106,9 +128,12 @@ CONVERSIONS* make_conversion();
 NODE* GetF(CONVERSIONS* conversion, tokens_t* arr_token);
 NODE* copy_node(NODE* node);
 NODE* diff(NODE* node);
-NODE* simplifare(NODE* node);
+NODE* simplifare(NODE* node, NODE* root);
 tokens_t* create_lec(CONVERSIONS* conversion);
 int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token);
+NODE* GetC(CONVERSIONS* conversion, tokens_t* arr_token);
+unsigned long long hash_func(int val, NODE* node);
+void hash_all(NODE* val);
 
 
 #endif

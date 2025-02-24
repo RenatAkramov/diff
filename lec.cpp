@@ -32,6 +32,14 @@ int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token)
         {
             i++;
         }
+        else if (conversion->s[i] == '^')
+        {
+            value.sym_value = POW;
+            arr_token[conversion->p].name = "^";
+            arr_token[conversion->p].value = value;
+            conversion->p++;
+            i++;
+        }
         else if(conversion->s[i] == '(')
         {
             value.sym_value = bracket_left;
@@ -157,6 +165,16 @@ int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token)
             arr_token[conversion->p].value   = value;
             conversion->p++;
             i = i + 2;
+        }
+        else if(conversion->s[i] == 'e' && conversion->s[i + 1] == 'x' && conversion->s[i + 2] == 'p')
+        {
+            value.fun_value = EXP;
+            arr_token[conversion->p].name[0] = 'e';
+            arr_token[conversion->p].name[1] = 'x';
+            arr_token[conversion->p].name[2] = 'p';
+            arr_token[conversion->p].value   = value;
+            conversion->p++;
+            i = i + 3;
         }
         if(conversion->p - 2 >= 0)
         {

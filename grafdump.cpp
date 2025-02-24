@@ -3,6 +3,7 @@
 
 int DrawTree(NODE* root)
 {
+    printf("in draw\n");
     if (!root)
     {
         fprintf(stderr, "Drawing error: root(%p)\n", root);
@@ -53,20 +54,20 @@ int DrawNode(NODE* node, FILE* file_ptr)
 
 
     fprintf(file_ptr, "label = \"");
-    printf("NODE TYPE: %d\n", node->type);
+    //printf("NODE TYPE: %d\n", node->type);
     if (node->type == VAR)
     {
-        printf("IN var\n");
+        //printf("IN var\n");
         fprintf(file_ptr,  "%c", 'x');
     }
     else if (node->type == NUM)
     {
-        printf("in NUM\n");
+        //printf("in NUM\n");
         fprintf(file_ptr, "%d", node->value.num_value);
     }
     else if (node->type == SYM)
     {
-        printf("in SYM\n");
+        //printf("in SYM\n");
         for (int i = 0; i < amount_operations; ++i)
         {
             if (node->value.sym_value == operations[i].code)
@@ -79,8 +80,8 @@ int DrawNode(NODE* node, FILE* file_ptr)
     }
     else if (node->type == FUN)
     {
-        printf("in FUN\n");
-        for (int i = 0; i < amount_operations; ++i)
+        //printf("in FUN\n");
+        for (int i = 0; i < amount_fun; ++i)
         {
             if (node->value.fun_value == funktions[i].code)
             {
@@ -90,7 +91,7 @@ int DrawNode(NODE* node, FILE* file_ptr)
         }
     }
 
-    fprintf(file_ptr, "\"];\n");
+    fprintf(file_ptr, "  |  %llx \"];\n", node-> hash);
 
     if (DrawNode(node->left,  file_ptr) != 0) return -1;
     if (DrawNode(node->right, file_ptr) != 0) return -1;
