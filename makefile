@@ -1,10 +1,8 @@
 all: clean diff
 
-flags = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op -Wno-missing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
-
-
-diff: differentiator.o grafdump.o read_tree.o lec.o main.o simplifare.o
-	g++ differentiator.o grafdump.o read_tree.o lec.o main.o simplifare.o -o .\a.exe
+flags = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall 
+diff: differentiator.o grafdump.o read_tree.o lec.o main.o simplifare.o print_Latex.o
+	g++ differentiator.o grafdump.o read_tree.o lec.o print_Latex.o main.o simplifare.o -o ./a.out
 
 differentiator.o: differentiator.cpp
 	g++ -c $(flags) differentiator.cpp
@@ -24,5 +22,8 @@ main.o: main.cpp
 simplifare.o: simplifare.cpp
 	g++ -c $(flags) simplifare.cpp
 
+print_Latex.o: print_Latex.cpp
+	g++ -c $(flags) print_Latex.cpp
+
 clean:
-	rm -rf *.o *.exe *.exe.log *.exe.log.dmp
+	rm -rf *.o *.exe *.exe.log *.exe.log.dmp *.out

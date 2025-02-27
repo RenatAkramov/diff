@@ -13,6 +13,7 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+#include <stdint.h>
 
 //#include <TXLib.h>
 
@@ -81,7 +82,7 @@ enum hsh
     ERRORS = 0
 };
 
-const int amount_operations = 10;
+const int amount_operations = 5;
 
 
 struct operations_t
@@ -107,7 +108,7 @@ struct FUNKTION_T
     int code;
 };
 
-const int amount_simplifare = 2;
+const int amount_simplifare = 3;
 
 const int amount_fun = 6;
 const FUNKTION_T funktions[amount_fun] = {{"sin", SIN}, {"cos", COS}, {"tg", TG}, {"ctg", CTG}, {"ln", LN}, {"exp", EXP}};
@@ -134,6 +135,8 @@ int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token);
 NODE* GetC(CONVERSIONS* conversion, tokens_t* arr_token);
 unsigned long long hash_func(int val, NODE* node);
 void hash_all(NODE* val);
+int print_node(NODE* node, FILE* file_ptr);
+void print_latex(NODE* root);
 
 
 #endif

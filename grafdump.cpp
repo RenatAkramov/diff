@@ -1,5 +1,4 @@
 #include "differentiator.h"
-#include <stdlib.h>
 
 int DrawTree(NODE* root)
 {
@@ -17,7 +16,7 @@ int DrawTree(NODE* root)
         fprintf(stderr, "File \"grafdump.dot\" error!\n");
         return -1;
     }
-
+    printf("erglifdkn\n");
     fprintf(file_ptr, "digraph G\n{\n  rankdir = UD;\n  edge[color = \"green\"];\n");
 
     DrawNode(root, file_ptr);
@@ -27,7 +26,7 @@ int DrawTree(NODE* root)
     fclose(file_ptr);
 
     system("dot grafdump.dot -Tpng -o Dump.png");
-
+    printf("after dot\n");
     return 0;
 }
 
@@ -85,13 +84,13 @@ int DrawNode(NODE* node, FILE* file_ptr)
         {
             if (node->value.fun_value == funktions[i].code)
             {
-                fprintf(file_ptr, "%s", funktions[i].name);
+                fprintf(file_ptr, "{%s}", funktions[i].name);
                 break;
             }
         }
     }
 
-    fprintf(file_ptr, "  |  %llx \"];\n", node-> hash);
+    fprintf(file_ptr, "|{%d |  %llx} \"];\n",node->type, node-> hash);
 
     if (DrawNode(node->left,  file_ptr) != 0) return -1;
     if (DrawNode(node->right, file_ptr) != 0) return -1;

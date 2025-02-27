@@ -5,7 +5,7 @@
 unsigned long long hash_func(int val, NODE* node)
 {
     unsigned long long hash_calculation = 0x1505;
-    int value = val + (int) node;
+    int value = val + (uintptr_t)  node;
     hash_calculation = ((hash_calculation << 5) + hash_calculation) ^ (value); /* hash * 33 + c */
     
     return hash_calculation;

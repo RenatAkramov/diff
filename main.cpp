@@ -23,4 +23,5 @@ int main()
     hash_all(root);
     printf("after hash\n");
     DrawTree(root);
+    print_latex(root);
 }

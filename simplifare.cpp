@@ -5,9 +5,13 @@ NODE* simplifare(NODE* node, NODE* root)
     hash_all(root);
     DrawTree(root);
     printf("hash sim %llx \n", node->hash);
+    if (node->left != NULL)
+    {
+        printf("hash left: %llx\n", node->left->hash);
+    }
     if (node->type == SYM)
     {
-
+        printf("in SYM \n");
         union values value = {};
         switch(node->value.sym_value)
         {
@@ -22,6 +26,7 @@ NODE* simplifare(NODE* node, NODE* root)
                     node->right = node_r->right;
                     node->type  = node_r->type;
                     node->value = node_r->value;
+                    break;
                 }
                 else if(node->right->type == NUM && node->right->value.num_value == 0)
                 {
@@ -33,9 +38,10 @@ NODE* simplifare(NODE* node, NODE* root)
                     node->type  = node_r->type;
                     node->value = node_r->value;
                     printf("t after\n");
+                    break;
                     //DrawTree(root);
                 }
-                else if(node->right->type == NUM && node->left->type == NUM)
+                else if(node->right->type == NUM && node->left->type == NUM)//заходит сюда вместо 3 варианта
                 {
                     printf("3\n");
                     node->type = NUM;
@@ -44,8 +50,9 @@ NODE* simplifare(NODE* node, NODE* root)
 
                     node->left = NULL;
                     node->right = NULL;
+                    break;
                 }
-                else if(node->left->value.sym_value == ADD || node->left->value.sym_value == SUB)
+                else if(node->left->type == SYM)
                 {
 
                     if(node->left->value.sym_value == ADD )
@@ -64,6 +71,7 @@ NODE* simplifare(NODE* node, NODE* root)
                             node->type  = node_r->type;
                             node->value = node_r->value;
                             node->left->value.num_value = arg;
+                            break;
                         }
                         else if(node->left->right->type == NUM && node->right->type == NUM)
                         {
@@ -77,9 +85,10 @@ NODE* simplifare(NODE* node, NODE* root)
                             node->type  = node_r->type;
                             node->value = node_r->value;
                             node->left->value.num_value = arg;
+                            break;
                         }
                     }
-                    if(node->left->value.sym_value == SUB )
+                    else if(node->left->value.sym_value == SUB )
                     {
                         if(node->left->left->type == NUM && node->right->type == NUM)
                         {
@@ -100,6 +109,7 @@ NODE* simplifare(NODE* node, NODE* root)
                                 node->value.sym_value = SUB;
                             }
                             node->left->value.num_value = arg;
+                            break;
                         }
                         else if(node->left->right->type == NUM && node->right->type == NUM)
                         {
@@ -119,6 +129,7 @@ NODE* simplifare(NODE* node, NODE* root)
                                 node->value.sym_value = SUB;
                             }
                             node->left->value.num_value = arg;
+                            break;
                         }
                     }
 
@@ -248,7 +259,23 @@ NODE* simplifare(NODE* node, NODE* root)
                 printf("h: %llx\n " , node->hash);
                 assert(node->left);
                 assert(node->right);
-                if(node->left->type == NUM && node->left->value.num_value == 1)
+                if (node->left->type == NUM && node->left->value.num_value == 0)
+                {
+                    node->left = NULL;
+                    node->right = NULL;
+                    node->type = NUM;
+                    node->value.num_value = 0;
+                    break;
+                }
+                else if (node->right->type == NUM && node->right->value.num_value == 0)
+                {
+                    node->left = NULL;
+                    node->right = NULL;
+                    node->type = NUM;
+                    node->value.num_value = 0;
+                    break;
+                }
+                else if(node->left->type == NUM && node->left->value.num_value == 1)
                 {
                     printf("m1\n");
                     NODE* node_r = node->right;
@@ -293,6 +320,7 @@ NODE* simplifare(NODE* node, NODE* root)
                     node->right = node_r->right;
                     node->type  = node_r->type;
                     node->value = node_r->value;
+                    break;
                 }
                 else if(node->right->type == NUM && node->left->type == NUM)
                 {
@@ -302,6 +330,7 @@ NODE* simplifare(NODE* node, NODE* root)
 
                     node->left = NULL;
                     node->right = NULL;
+                    break;
                 }
                 break;
             }
@@ -315,6 +344,7 @@ NODE* simplifare(NODE* node, NODE* root)
                     node->right = node_r->right;
                     node->type  = node_r->type;
                     node->value = node_r->value;
+                    break;
                 }
                 break;
             }
@@ -326,7 +356,14 @@ NODE* simplifare(NODE* node, NODE* root)
             }
 
         }
+        }
+    }    
+    else
+    {
+        printf("no sym\n");
     }
+   
+    
     printf("in end fun sim\n");
     if (node->left != NULL)
     {
@@ -338,7 +375,6 @@ NODE* simplifare(NODE* node, NODE* root)
     }
     printf("return\n");
     return node;
-    }
-    
 }
+
 
