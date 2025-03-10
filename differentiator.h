@@ -108,7 +108,7 @@ struct FUNKTION_T
     int code;
 };
 
-const int amount_simplifare = 3;
+const int amount_simplifare = 5;
 
 const int amount_fun = 6;
 const FUNKTION_T funktions[amount_fun] = {{"sin", SIN}, {"cos", COS}, {"tg", TG}, {"ctg", CTG}, {"ln", LN}, {"exp", EXP}};
@@ -135,8 +135,8 @@ int create_tokens(int len_buf, CONVERSIONS* conversion, tokens_t* arr_token);
 NODE* GetC(CONVERSIONS* conversion, tokens_t* arr_token);
 unsigned long long hash_func(int val, NODE* node);
 void hash_all(NODE* val);
-int print_node(NODE* node, FILE* file_ptr);
-void print_latex(NODE* root);
+int print_node(NODE* node, FILE* file_l);
+void create_latex_simplifare_diff(NODE* root);
 
 
 #endif

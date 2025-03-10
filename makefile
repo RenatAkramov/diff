@@ -26,4 +26,4 @@ print_Latex.o: print_Latex.cpp
 	g++ -c $(flags) print_Latex.cpp
 
 clean:
-	rm -rf *.o *.exe *.exe.log *.exe.log.dmp *.out
+	rm -rf *.o *.exe *.exe.log *.exe.log.dmp *.out *.aux *.log *.fls *.pdf *.gz *.fdb_latexmk
